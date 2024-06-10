@@ -21,6 +21,8 @@ def run_marker(
     # return
     model_lst = load_all_models()
     for input_path in os.listdir(input_ticker_year_path):
+        if not input_path.endswith(".pdf"):
+            continue
         input_path = os.path.join(input_ticker_year_path, input_path)
         full_text, images, out_meta = convert_single_pdf(
             input_path, model_lst, langs=["English"], batch_multiplier=batch_multiplier

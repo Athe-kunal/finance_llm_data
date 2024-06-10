@@ -20,7 +20,7 @@ import traceback
 import json
 
 configure_logging()
-
+SAVE_DIR = "output/SEC_EDGAR_FILINGS_MD"
 
 def worker_init(shared_model):
     global model_refs
