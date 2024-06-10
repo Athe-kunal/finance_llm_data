@@ -8,6 +8,7 @@ import requests
 from filings_src.prepline_sec_filings.fetch import get_filing
 import pandas as pd
 from datetime import datetime
+from langchain.schema import Document
 
 
 def sec_main(
@@ -55,9 +56,16 @@ def sec_main(
                 if form_name in sec_form_names:
                     form_name += "-1"
             no_dashes_acc_num = re.sub("-", "", acc_num)
-            form_lists.append([no_dashes_acc_num, form_name, filing_date, report_date])
+            form_lists.append(
+                {
+                    "accession_number": no_dashes_acc_num,
+                    "form_name": form_name,
+                    "filing_date": filing_date,
+                    "report_date": report_date,
+                }
+            )
             sec_form_names.append(form_name)
-    acc_nums_list = [fl[0] for fl in form_lists]
+    acc_nums_list = [fl["accession_number"] for fl in form_lists]
 
     get_filing_partial = partial(
         get_filing,
@@ -71,15 +79,8 @@ def sec_main(
         results = executor.map(get_filing_partial, acc_nums_list)
     results_texts = []
     for res in results:
-        if res!="":
+        if res != "":
             results_texts.append(res)
-    # results_texts = []
-    # for acc in acc_nums_list:
-    #     try:
-    #         results_texts.append(get_filing_partial(acc))
-    #     except Exception as e:
-    #         print(e)
-    #         results_texts.append("")
     assert len(results_texts) == len(
         acc_nums_list
     ), f"The scraped text {len(results_texts)} is not matching with accession number texts {len(acc_nums_list)}"
@@ -95,6 +96,10 @@ def sec_main(
     ), f"The section text {len(section_texts)} is not matching with accession number texts {len(acc_nums_list)}"
 
     print("Extracted")
+    docs = []
     for idx, val in enumerate(form_lists):
-        val.append(section_texts[idx])
-    return form_lists, sec_form_names
+        # val['sec_texts'] = section_texts[idx]
+        for sec_name, sec_text in section_texts[idx].items():
+            val.update({"section_name": sec_name})
+            docs.append(Document(page_content=sec_text, metadata=val))
+    return docs, sec_form_names

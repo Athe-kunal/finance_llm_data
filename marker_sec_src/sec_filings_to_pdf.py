@@ -10,10 +10,12 @@ import json
 
 SEC_SEARCH_URL: Final[str] = "http://www.sec.gov/cgi-bin/browse-edgar"
 
+
 def _search_url(cik: Union[str, int]) -> str:
     search_string = f"CIK={cik}&Find=Search&owner=exclude&action=getcompany"
     url = f"{SEC_SEARCH_URL}?{search_string}"
     return url
+
 
 def get_cik_by_ticker(ticker: str) -> str:
     """Gets a CIK number from a stock ticker by running a search on the SEC website."""
@@ -43,10 +45,13 @@ def get_cik_by_ticker(ticker: str) -> str:
     results = cik_re.findall(response.text)
     return str(results[0])
 
-SEC_EDGAR_URL = 'https://www.sec.gov/Archives/edgar/data'
+
+SEC_EDGAR_URL = "https://www.sec.gov/Archives/edgar/data"
 
 BASE_DIR = "output/SEC_EDGAR_FILINGS"
-os.makedirs(BASE_DIR,exist_ok=True)
+os.makedirs(BASE_DIR, exist_ok=True)
+
+
 def sec_save_pdfs(
     ticker: str,
     year: str,
@@ -55,7 +60,7 @@ def sec_save_pdfs(
 ):
     cik = get_cik_by_ticker(ticker)
     rgld_cik = int(cik.lstrip("0"))
-    ticker_year_path = os.path.join(BASE_DIR,f"{ticker}-{year}")
+    ticker_year_path = os.path.join(BASE_DIR, f"{ticker}-{year}")
     os.makedirs(ticker_year_path, exist_ok=True)
     forms = []
     if include_amends:
@@ -97,25 +102,32 @@ def sec_save_pdfs(
             sec_form_names.append(form_name)
     process_links = lambda x: "".join(x.split("-"))
 
-    acc_nums_list = [[fl[0],fl[1],process_links(fl[-1])] for fl in form_lists]
-    
-    html_urls = [[f"{SEC_EDGAR_URL}/{rgld_cik}/{acc}/{ticker.lower()}-{report_date}.htm",filing_type] for acc,filing_type,report_date in acc_nums_list]
-    
-    metadata_json = _convert_html_to_pdfs(html_urls,ticker_year_path)
-    
+    acc_nums_list = [[fl[0], fl[1], process_links(fl[-1])] for fl in form_lists]
+
+    html_urls = [
+        [
+            f"{SEC_EDGAR_URL}/{rgld_cik}/{acc}/{ticker.lower()}-{report_date}.htm",
+            filing_type,
+        ]
+        for acc, filing_type, report_date in acc_nums_list
+    ]
+
+    metadata_json = _convert_html_to_pdfs(html_urls, ticker_year_path)
+
     # with open(os.path.join(ticker_year_path,'metadata.json'), 'w') as f:
     #     json.dump(metadata_json, f)
     return html_urls, metadata_json, ticker_year_path
 
-def _convert_html_to_pdfs(html_urls,base_path:str):
+
+def _convert_html_to_pdfs(html_urls, base_path: str):
     metadata_json = {}
     for html_url in html_urls:
         pdf_path = html_url[0].split("/")[-1]
         # Add the filing type
-        pdf_path = pdf_path.replace(".htm",f"-{html_url[1]}.pdf")
+        pdf_path = pdf_path.replace(".htm", f"-{html_url[1]}.pdf")
         # /A for amended is not a valid path
-        pdf_path = pdf_path.replace("10-K/A","10-KA")
-        metadata_json[pdf_path] = {"languages":["English"]}
-        pdf_path = os.path.join(base_path,pdf_path)
+        pdf_path = pdf_path.replace("10-K/A", "10-KA")
+        metadata_json[pdf_path] = {"languages": ["English"]}
+        pdf_path = os.path.join(base_path, pdf_path)
         pdfkit.from_url(html_url[0], pdf_path)
     return metadata_json

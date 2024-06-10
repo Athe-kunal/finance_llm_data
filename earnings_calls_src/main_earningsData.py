@@ -3,6 +3,7 @@ import re
 from langchain.schema import Document
 from tenacity import RetryError
 
+
 def clean_speakers(speaker):
     speaker = re.sub("\n", "", speaker)
     speaker = re.sub(":", "", speaker)
@@ -48,12 +49,13 @@ def get_earnings_all_quarters_data(quarter: str, ticker: str, year: int):
     )
     return docs, speakers_list
 
+
 def get_earnings_all_docs(ticker: str, year: int):
     earnings_docs = []
     earnings_call_quarter_vals = []
     print("Earnings Call Q1")
     try:
-        docs, speakers_list_1 = get_earnings_all_quarters_data(docs, "Q1", ticker, year)
+        docs, speakers_list_1 = get_earnings_all_quarters_data("Q1", ticker, year)
         earnings_call_quarter_vals.append("Q1")
         earnings_docs.extend(docs)
     except RetryError:
@@ -62,7 +64,7 @@ def get_earnings_all_docs(ticker: str, year: int):
 
     print("Earnings Call Q2")
     try:
-        docs, speakers_list_2 = get_earnings_all_quarters_data(docs, "Q2", ticker, year)
+        docs, speakers_list_2 = get_earnings_all_quarters_data("Q2", ticker, year)
         earnings_call_quarter_vals.append("Q2")
         earnings_docs.extend(docs)
     except RetryError:
@@ -70,7 +72,7 @@ def get_earnings_all_docs(ticker: str, year: int):
         speakers_list_2 = []
     print("Earnings Call Q3")
     try:
-        docs, speakers_list_3 = get_earnings_all_quarters_data(docs, "Q3", ticker, year)
+        docs, speakers_list_3 = get_earnings_all_quarters_data("Q3", ticker, year)
         earnings_call_quarter_vals.append("Q3")
         earnings_docs.extend(docs)
     except RetryError:
@@ -78,7 +80,7 @@ def get_earnings_all_docs(ticker: str, year: int):
         speakers_list_3 = []
     print("Earnings Call Q4")
     try:
-        docs, speakers_list_4 = get_earnings_all_quarters_data(docs, "Q4", ticker, year)
+        docs, speakers_list_4 = get_earnings_all_quarters_data("Q4", ticker, year)
         earnings_call_quarter_vals.append("Q4")
         earnings_docs.extend(docs)
     except RetryError:

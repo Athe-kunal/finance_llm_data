@@ -1,1 +1,1 @@
-from main_earningsData import get_earnings_all_docs
+from earnings_calls_src.main_earningsData import get_earnings_all_docs
