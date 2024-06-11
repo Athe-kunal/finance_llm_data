@@ -39,7 +39,8 @@ def process_single_pdf(args):
     fname = os.path.basename(filepath)
     if markdown_exists(out_folder, fname):
         return
-
+    if not filepath.endswith("pdf"): 
+        return
     try:
         # Skip trying to convert files that don't have a lot of embedded text
         # This can indicate that they were scanned, and not OCRed properly
@@ -52,7 +53,7 @@ def process_single_pdf(args):
             length = get_length_of_text(filepath)
             if length < min_length:
                 return
-
+        
         full_text, images, out_metadata = convert_single_pdf(
             filepath, model_refs, metadata=metadata
         )
