@@ -47,7 +47,6 @@ def get_data(
                 workers=workers,
                 num_chunks=num_chunks,
                 vram_per_task=vram_per_task,
-                num_chunks=num_chunks,
                 batch_multiplier=batch_multiplier,
             )
         print(f"Files have been saved successfully. Check in the folder {output_ticker_year_path}")

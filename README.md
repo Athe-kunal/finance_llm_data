@@ -5,13 +5,13 @@
 You can run locally by first building a virtual environment
 
 ```bash
-python -m venv marker-sec-env
+python -m venv finance-data-env
 ```
 
 Activate the virtual environment
 
 ```bash
-source marker-sec-env/bin/activate
+source finance-data-env/bin/activate
 ```
 
 Install the packages
