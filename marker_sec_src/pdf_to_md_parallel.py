@@ -2,6 +2,7 @@ import os
 
 os.environ["IN_STREAMLIT"] = "true"  # Avoid multiprocessing inside surya
 os.environ["PDFTEXT_CPU_WORKERS"] = "1"  # Avoid multiprocessing inside pdftext
+SAVE_DIR = "output/SEC_EDGAR_FILINGS_MD"
 
 import pypdfium2  # Needs to be at the top to avoid warnings
 from typing import Optional

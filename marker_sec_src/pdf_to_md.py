@@ -9,13 +9,9 @@ SAVE_DIR = "output/SEC_EDGAR_FILINGS_MD"
 
 # def run_marker(input_ticker_year_path:str,ticker:str,year:str,workers:int=4,max_workers:int=8,num_chunks:int=1):
 def run_marker(
-    input_ticker_year_path: str, ticker: str, year: str, batch_multiplier: int = 2
+    input_ticker_year_path: str, output_ticker_year_path:str,batch_multiplier: int = 2
 ):
-    # subprocess.run(["ls", "-l"])
-    os.makedirs(SAVE_DIR, exist_ok=True)
-    # path_to_metadata = os.path.join(input_ticker_year_path,"metadata.json")
-    output_ticker_year_path = os.path.join(SAVE_DIR, f"{ticker}-{year}")
-    os.makedirs(output_ticker_year_path, exist_ok=True)
+    
 
     # subprocess.run(["marker", input_ticker_year_path,output_ticker_year_path,  "--workers", str(workers), "--num_chunks",str(num_chunks),"--max", str(max_workers) ,"--metadata_file", path_to_metadata])
     # return
@@ -32,3 +28,4 @@ def run_marker(
             output_ticker_year_path, fname, full_text, images, out_meta
         )
         print(f"Saved markdown to the {subfolder_path} folder")
+    del model_lst

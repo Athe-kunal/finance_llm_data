@@ -113,10 +113,10 @@ def sec_save_pdfs(
     ]
 
     metadata_json = _convert_html_to_pdfs(html_urls, ticker_year_path)
-
-    with open(os.path.join(ticker_year_path,'metadata.json'), 'w') as f:
+    metadata_file_path = os.path.join(ticker_year_path,'metadata.json') 
+    with open(metadata_file_path, 'w') as f:
         json.dump(metadata_json, f)
-    return html_urls, metadata_json, ticker_year_path
+    return html_urls, metadata_json, metadata_file_path,ticker_year_path
 
 
 def _convert_html_to_pdfs(html_urls, base_path: str):
