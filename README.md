@@ -29,3 +29,4 @@ sudo apt-get install wkhtmltopdf
 
 Refer [here](https://pypi.org/project/pdfkit/) for installation instructions for other OS platforms
 
+FOLLOW THE TUTORIAL `Data.ipynb` for learning how to use the library
